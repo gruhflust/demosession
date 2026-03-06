@@ -1,9 +1,11 @@
-Attribute VB_Name = "ImportCopilotMakro"
 Option Explicit
 
-' Importiert die von Copilot gelieferte .bas-Datei in das aktive VBA-Projekt.
-' Hinweis: In Excel muss aktiviert sein:
-' Trust Center -> Makroeinstellungen -> "Zugriff auf das VBA-Projektobjektmodell vertrauen".
+' Copy/Paste-fähige Einmal-Setup-Prozedur für dein Workbook.
+' Fügt/aktualisiert das Modul "CopilotMakro" aus C:\temp\demosession\CopilotMakro.bas.
+'
+' WICHTIG (einmalig in Excel aktivieren):
+' Datei > Optionen > Trust Center > Einstellungen für das Trust Center >
+' Makroeinstellungen > "Zugriff auf das VBA-Projektobjektmodell vertrauen"
 Public Sub ImportCopilotMakro()
     Const MODULE_PATH As String = "C:\temp\demosession\CopilotMakro.bas"
     Const MODULE_NAME As String = "CopilotMakro"
@@ -13,10 +15,16 @@ Public Sub ImportCopilotMakro()
 
     On Error GoTo ErrHandler
 
+    If Dir$(MODULE_PATH) = vbNullString Then
+        MsgBox "Datei nicht gefunden: " & MODULE_PATH, vbExclamation
+        Exit Sub
+    End If
+
     Set vbProj = Application.VBE.ActiveVBProject
 
+    ' Vorhandenes Modul gleichen Namens entfernen, damit Import sauber aktualisiert.
     For Each vbComp In vbProj.VBComponents
-        If vbComp.Name = MODULE_NAME Then
+        If StrComp(vbComp.Name, MODULE_NAME, vbTextCompare) = 0 Then
             vbProj.VBComponents.Remove vbComp
             Exit For
         End If

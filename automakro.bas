@@ -1,8 +1,6 @@
-Sub automakroCoPilot()
+Public Sub CopilotMakro()
 '
-' automakroCoPilot Makro
-'
-
+' CopilotMakro Makro
 '
     Range("L6").Select
     ActiveCell.FormulaR1C1 = "Hallo"
